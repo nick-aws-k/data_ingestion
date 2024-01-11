@@ -1,0 +1,34 @@
+name: data-ingestion-elt-pipeline
+
+on:
+  pull_request_target:
+    types:
+      - closed
+    branches:
+      - main
+  
+# Environment variables available to all jobs and steps in this workflow
+env:
+  PROJECT: elt
+  ENV: prod
+
+jobs:
+  prod-kna-job:
+    runs-on: ubuntu-latest
+    environment: prod-kna
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+    - name: Code checkout from github repo
+      uses: actions/checkout@v3
+      
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v3
+      with:
+        aws-region: us-east-1
+        role-to-assume: arn:aws:iam::553634521538:role/MyGitHubAssumeRole
+        role-session-name: GitHubRoleSession
+        
+    - name: Validate assume role
+      run: aws sts get-caller-identity --region us-east-1
