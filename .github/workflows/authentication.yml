@@ -27,7 +27,7 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v3
       with:
         aws-region: us-east-1
-        role-to-assume: arn:aws:iam::553634521538:role/MyGitHubAssumeRole
+        role-to-assume: ${{secrets.GITHUBSTACKDEPLOYMENTROLE}}
         role-session-name: GitHubRoleSession
         
     - name: Validate assume role
