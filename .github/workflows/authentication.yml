@@ -42,8 +42,6 @@ jobs:
         name: vpc-multi-tier
         # The path or URL to the CloudFormation template
         template: CloudInfrastructure/vpc-multi-tier.yml
-        # The comma-delimited list of stack template capabilities to acknowledge. Defaults to 'CAPABILITY_IAM'
-        capabilities: # optional, default is CAPABILITY_IAM
         # The parameters to override in the stack inputs. You can pass a comma-delimited list or a file URL. Comma-delimited list has each entry formatted as <ParameterName>=<ParameterValue> or <ParameterName>="<ParameterValue>,<ParameterValue>". A JSON file can be a local file with a "file://" prefix or remote URL. The file should look like: [ { "ParameterKey": "KeyPairName", "ParameterValue": "MyKey" }]
         parameter-overrides: file://${{ github.workspace }}/CloudInfrastructure/parameter-vpc-multi-tier.json
         # Indicates whether to execute to the change set or have it reviewed. Default to '0' (will execute the change set)
@@ -52,6 +50,8 @@ jobs:
         no-delete-failed-changeset: # optional, default is 0
         # If the CloudFormation change set is empty, do not fail. Defaults to '0' (will fail on empty change set)
         no-fail-on-empty-changeset: "1"
+        # The comma-delimited list of stack template capabilities to acknowledge. Defaults to 'CAPABILITY_IAM'
+        capabilities: CAPABILITY_NAMED_IAM
         # IAM role to create the CloudFormation stack
         role-arn: ${{secrets.GITHUBSTACKDEPLOYMENTROLE}}
     
