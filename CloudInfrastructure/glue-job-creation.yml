@@ -13,12 +13,12 @@ Resources:
       Role: !GetAtt GlueJobRole.Arn
       Command:
         Name: pythonshell
+        PythonVersion: "3.9"
         ScriptLocation: !Sub "s3://${GlueJobBucket}/your-python-script.py"
       DefaultArguments:
         "--extra-py-files": !Sub "s3://${GlueJobBucket}/your-dependency.zip"
       MaxRetries: 0
       Timeout: 10
-      PythonVersion: "3.9"
 
   GlueJobRole:
     Type: AWS::IAM::Role
