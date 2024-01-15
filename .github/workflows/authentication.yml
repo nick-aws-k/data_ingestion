@@ -54,4 +54,4 @@ jobs:
         capabilities: CAPABILITY_NAMED_IAM
         # IAM role to create the CloudFormation stack
         role-arn: ${{secrets.GITHUBSTACKDEPLOYMENTROLE}}
-    
+        
