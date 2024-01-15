@@ -18,6 +18,7 @@ Resources:
         "--extra-py-files": !Sub "s3://${GlueJobBucket}/your-dependency.zip"
       MaxRetries: 0
       Timeout: 10
+      PythonVersion: "3.9"
 
   GlueJobRole:
     Type: AWS::IAM::Role
