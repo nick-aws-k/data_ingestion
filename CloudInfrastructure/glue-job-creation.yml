@@ -4,7 +4,7 @@ Resources:
   GlueJobBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: test-bucket
+      BucketName: n-test-bucket
 
   GlueJob:
     Type: AWS::Glue::Job
