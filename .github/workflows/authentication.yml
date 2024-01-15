@@ -45,7 +45,7 @@ jobs:
         # The comma-delimited list of stack template capabilities to acknowledge. Defaults to 'CAPABILITY_IAM'
         capabilities: # optional, default is CAPABILITY_IAM
         # The parameters to override in the stack inputs. You can pass a comma-delimited list or a file URL. Comma-delimited list has each entry formatted as <ParameterName>=<ParameterValue> or <ParameterName>="<ParameterValue>,<ParameterValue>". A JSON file can be a local file with a "file://" prefix or remote URL. The file should look like: [ { "ParameterKey": "KeyPairName", "ParameterValue": "MyKey" }]
-        parameter-overrides: file://CloudInfrastructure/parameter-vpc-multi-tier.yml
+        parameter-overrides: file://${{ github.workspace }}/CloudInfrastructure/parameter-vpc-multi-tier.json
         # Indicates whether to execute to the change set or have it reviewed. Default to '0' (will execute the change set)
         no-execute-changeset: # optional, default is 0
         # Indicates whether to delete to a failed change set. Default to '0' (will delete the failed changeset)
