@@ -16,8 +16,6 @@ Resources:
         ScriptLocation: !Sub "s3://${GlueJobBucket}/your-python-script.py"
       DefaultArguments:
         "--extra-py-files": !Sub "s3://${GlueJobBucket}/your-dependency.zip"
-      Connections:
-        Connections: []
       MaxRetries: 0
       Timeout: 10
 
