@@ -188,7 +188,7 @@ Parameters:
   pTier3Create:
     Type: String
     Description: Whether Tier 3 should be created
-    Default: false
+    Default: true
     AllowedValues: [true, false]
 
   pTier3Name:
