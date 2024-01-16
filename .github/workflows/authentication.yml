@@ -97,8 +97,4 @@ jobs:
         # The comma-delimited list of stack template capabilities to acknowledge. Defaults to 'CAPABILITY_IAM'
         capabilities: CAPABILITY_NAMED_IAM
         # IAM role to create the CloudFormation stack
-<<<<<<< HEAD
-        role-arn: ${{secrets.GITHUBSTACKDEPLOYMENTROLE}}    
-=======
-        role-arn: ${{secrets.GITHUBSTACKDEPLOYMENTROLE}}    
->>>>>>> 5ed9dba8bdbd30e386d4303eb14f6da8ddbc7f36
+        role-arn: ${{secrets.GITHUBSTACKDEPLOYMENTROLE}}
