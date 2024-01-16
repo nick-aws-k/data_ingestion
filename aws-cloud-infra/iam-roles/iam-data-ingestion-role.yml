@@ -38,10 +38,6 @@ Resources:
             Action: 'sts:AssumeRole'
           - Effect: 'Allow'
             Principal:
-              Service: 'cloudwatch.amazonaws.com'
-            Action: 'sts:AssumeRole'
-          - Effect: 'Allow'
-            Principal:
               Service: 'rds.amazonaws.com'
             Action: 'sts:AssumeRole'
           - Effect: 'Allow'
@@ -51,7 +47,7 @@ Resources:
           - Effect: 'Allow'
             Principal:
               Service: 'lakeformation.amazonaws.com'
-            Action: 'sts:AssumeRole'		
+            Action: 'sts:AssumeRole'
           # Add other trusted services here
 
   DataIngestionRolePolicy:
