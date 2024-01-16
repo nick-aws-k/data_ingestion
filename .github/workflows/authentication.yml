@@ -41,9 +41,9 @@ jobs:
         # The name of the CloudFormation stack
         name: vpc-multi-tier
         # The path or URL to the CloudFormation template
-        template: CloudInfrastructure/vpc-multi-tier.yml
+        template: aws-cloud-infra/network-infra/vpc-multi-tier.yml
         # The parameters to override in the stack inputs. You can pass a comma-delimited list or a file URL. Comma-delimited list has each entry formatted as <ParameterName>=<ParameterValue> or <ParameterName>="<ParameterValue>,<ParameterValue>". A JSON file can be a local file with a "file://" prefix or remote URL. The file should look like: [ { "ParameterKey": "KeyPairName", "ParameterValue": "MyKey" }]
-        parameter-overrides: file://${{ github.workspace }}/CloudInfrastructure/parameter-vpc-multi-tier.json
+        parameter-overrides: file://${{ github.workspace }}/aws-cloud-infra/network-infra/parameter-vpc-multi-tier.json
         # Indicates whether to execute to the change set or have it reviewed. Default to '0' (will execute the change set)
         no-execute-changeset: # optional, default is 0
         # Indicates whether to delete to a failed change set. Default to '0' (will delete the failed changeset)
@@ -63,9 +63,9 @@ jobs:
         # The name of the CloudFormation stack
         name: glue-job-creation
         # The path or URL to the CloudFormation template
-        template: CloudInfrastructure/glue-job-creation.yml
+        template: aws-cloud-infra/glue-jobs/glue-job-creation.yml
         # The parameters to override in the stack inputs. You can pass a comma-delimited list or a file URL. Comma-delimited list has each entry formatted as <ParameterName>=<ParameterValue> or <ParameterName>="<ParameterValue>,<ParameterValue>". A JSON file can be a local file with a "file://" prefix or remote URL. The file should look like: [ { "ParameterKey": "KeyPairName", "ParameterValue": "MyKey" }]
-        # parameter-overrides: file://${{ github.workspace }}/CloudInfrastructure/parameter-vpc-multi-tier.json
+        # parameter-overrides: file://${{ github.workspace }}/aws-cloud-infra/glue-jobs/parameter-vpc-multi-tier.json
         # Indicates whether to execute to the change set or have it reviewed. Default to '0' (will execute the change set)
         no-execute-changeset: # optional, default is 0
         # Indicates whether to delete to a failed change set. Default to '0' (will delete the failed changeset)
@@ -76,4 +76,29 @@ jobs:
         capabilities: CAPABILITY_NAMED_IAM
         # IAM role to create the CloudFormation stack
         role-arn: ${{secrets.GITHUBSTACKDEPLOYMENTROLE}}
-        
+    
+    - name: Deploy IAM roles CloudFormation Stack
+      # You may pin to the exact commit or the version.
+      # uses: aws-actions/aws-cloudformation-github-deploy@023f4ef60d0103d690f31a504cfda9f4f2d66265
+      uses: aws-actions/aws-cloudformation-github-deploy@v1
+      with:
+        # The name of the CloudFormation stack
+        name: iam-roles-creation
+        # The path or URL to the CloudFormation template
+        template: aws-cloud-infra/iam-roles/iam-data-ingestion-role.yml
+        # The parameters to override in the stack inputs. You can pass a comma-delimited list or a file URL. Comma-delimited list has each entry formatted as <ParameterName>=<ParameterValue> or <ParameterName>="<ParameterValue>,<ParameterValue>". A JSON file can be a local file with a "file://" prefix or remote URL. The file should look like: [ { "ParameterKey": "KeyPairName", "ParameterValue": "MyKey" }]
+        # parameter-overrides: file://${{ github.workspace }}/aws-cloud-infra/iam-roles/parameter-vpc-multi-tier.json
+        # Indicates whether to execute to the change set or have it reviewed. Default to '0' (will execute the change set)
+        no-execute-changeset: # optional, default is 0
+        # Indicates whether to delete to a failed change set. Default to '0' (will delete the failed changeset)
+        no-delete-failed-changeset: # optional, default is 0
+        # If the CloudFormation change set is empty, do not fail. Defaults to '0' (will fail on empty change set)
+        no-fail-on-empty-changeset: "1"
+        # The comma-delimited list of stack template capabilities to acknowledge. Defaults to 'CAPABILITY_IAM'
+        capabilities: CAPABILITY_NAMED_IAM
+        # IAM role to create the CloudFormation stack
+<<<<<<< HEAD
+        role-arn: ${{secrets.GITHUBSTACKDEPLOYMENTROLE}}    
+=======
+        role-arn: ${{secrets.GITHUBSTACKDEPLOYMENTROLE}}    
+>>>>>>> 5ed9dba8bdbd30e386d4303eb14f6da8ddbc7f36
