@@ -1,0 +1,5 @@
+[
+{ "ParameterKey": "pOrg", "ParameterValue": "virso" },
+{ "ParameterKey": "pSystem", "ParameterValue": "datalake" },
+{ "ParameterKey": "pVpcName", "ParameterValue": "vpc-multi-tier" }
+]
