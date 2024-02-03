@@ -5,9 +5,9 @@ on:
     types:
       - closed
     branches:
-      - main
+      - dummy
     paths:
-      - 'aws-cloud-infra/*'
+      - 'dummy/*'
     
   
 # Environment variables available to all jobs and steps in this workflow
