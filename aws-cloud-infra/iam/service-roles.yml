@@ -1,25 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
 Resources:
-  GlueJobBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: project-test-bucket-xyz
-
-  GlueJob:
-    Type: AWS::Glue::Job
-    Properties:
-      Name: MyPythonShellJob
-      Role: !GetAtt GlueJobRole.Arn
-      Command:
-        Name: pythonshell
-        PythonVersion: "3.9"
-        ScriptLocation: !Sub "s3://${GlueJobBucket}/your-python-script.py"
-      DefaultArguments:
-        "--extra-py-files": !Sub "s3://${GlueJobBucket}/your-dependency.zip"
-      MaxRetries: 0
-      Timeout: 10
-
   GlueJobRole:
     Type: AWS::IAM::Role
     Properties:
