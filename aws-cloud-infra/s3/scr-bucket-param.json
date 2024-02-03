@@ -1,5 +1,54 @@
-[
-{ "ParameterKey": "pOrg", "ParameterValue": "virso" },
-{ "ParameterKey": "pSystem", "ParameterValue": "datalake" },
-{ "ParameterKey": "pVpcName", "ParameterValue": "vpc-multi-tier" }
-]
+{
+    "Buckets": [
+      {
+        "BucketName": "raw",
+        "AccessControl": "private",
+        "VersioningConfiguration": "Enabled",
+        "PublicAccessBlockConfiguration": "true",
+        "BucketEncryption": "AES256",
+        "LifecycleConfiguration": {
+          "Rules": [
+            {
+              "ID": "Rule1",
+              "Prefix": "logs/",
+              "Status": "Enabled",
+              "ExpirationInDays": 30
+            }
+          ]
+        },
+        "Tags": {
+          "solution": "Ingestion-raw-bucket",
+          "Department": "Global-IT",
+          "CompanyName": "DataSoftTech",
+          "ProjectName": "Ingestion-Framework"
+        },
+        "CompanyName": "DataSoftTech",
+        "ProjectName": "Ingestion-Framework"
+      },
+      {
+        "BucketName": "land",
+        "AccessControl": "public-read",
+        "VersioningConfiguration": "Suspended",
+        "PublicAccessBlockConfiguration": "false",
+        "BucketEncryption": "AES256",
+        "LifecycleConfiguration": {
+          "Rules": [
+            {
+              "ID": "Rule2",
+              "Prefix": "backups/",
+              "Status": "Enabled",
+              "ExpirationInDays": 90
+            }
+          ]
+        },
+        "Tags": {
+          "Name": "Ingestion-land-bucket",
+          "Department": "Global-IT",
+          "CompanyName": "DataSoftTech",
+          "ProjectName": "Ingestion-Framework"
+        },
+        "CompanyName": "DataSoftTech",
+        "ProjectName": "Ingestion-Framework"
+      }
+    ]
+  }
