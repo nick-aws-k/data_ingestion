@@ -41,9 +41,9 @@ jobs:
         # The name of the CloudFormation stack
         name: cf-s3-scr-bucket
         # The path or URL to the CloudFormation template
-        template: aws-cloud-infra\s3\scr-bucket.yml
+        template: aws-cloud-infra/s3/scr-bucket.yml
         # The parameters to override in the stack inputs. You can pass a comma-delimited list or a file URL. Comma-delimited list has each entry formatted as <ParameterName>=<ParameterValue> or <ParameterName>="<ParameterValue>,<ParameterValue>". A JSON file can be a local file with a "file://" prefix or remote URL. The file should look like: [ { "ParameterKey": "KeyPairName", "ParameterValue": "MyKey" }]
-        parameter-overrides: file://${{ github.workspace }}/aws-cloud-infra\s3\scr-bucket-param.json
+        parameter-overrides: file://${{ github.workspace }}/aws-cloud-infra/s3/scr-bucket-param.json
         # Indicates whether to execute to the change set or have it reviewed. Default to '0' (will execute the change set)
         no-execute-changeset: # optional, default is 0
         # Indicates whether to delete to a failed change set. Default to '0' (will delete the failed changeset)
