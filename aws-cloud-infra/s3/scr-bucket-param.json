@@ -1,4 +1,4 @@
-{
+[
     "Buckets": [
       {
         "BucketName": "raw",
@@ -51,4 +51,4 @@
         "ProjectName": "Ingestion-Framework"
       }
     ]
-  }
+  ]
