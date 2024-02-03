@@ -1,0 +1,83 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  CompanyName:
+    Type: String
+    Description: Name of Company for which the bucket is provisioning
+  ProjectName:
+    Type: String
+    Description: Name of Project for which the bucket is provisioning
+  Buckets:
+    Type: Json
+    Description: The properties for multiple S3 buckets.
+  DefaultAccessControl:
+    Type: String
+    Description: The default access control for S3 buckets.
+    AllowedValues:
+      - private
+      - public-read
+    Default: private
+  DefaultVersioningConfiguration:
+    Type: String
+    Description: The default versioning configuration for S3 buckets.
+    AllowedValues:
+      - Enabled
+      - Suspended
+    Default: Enabled
+  DefaultPublicAccessBlockConfiguration:
+    Type: String
+    Description: The default public access block configuration for S3 buckets.
+    AllowedValues:
+      - true
+      - false
+    Default: true
+  DefaultBucketEncryption:
+    Type: String
+    Description: The default bucket encryption for S3 buckets.
+    AllowedValues:
+      - AES256
+      - aws:kms
+    Default: AES256
+  DefaultBucketLifecycleConfiguration:
+    Type: Json
+    Description: The default bucket lifecycle configuration for S3 buckets.
+  DefaultTags:
+    Type: Json
+    Description: The default tags to apply to S3 buckets.
+  EnableTagging:
+    Type: String
+    Description: Whether to enable tagging for S3 buckets.
+    AllowedValues:
+      - true
+      - false
+    Default: true
+
+Resources:
+  MyBuckets:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketName
+      AccessControl: !If [!Equals [!Ref AccessControl, ""], !Ref AccessControl, !Ref DefaultAccessControl]
+      VersioningConfiguration:
+        Status: !If [!Equals [!Ref VersioningConfiguration, ""], !Ref VersioningConfiguration, !Ref DefaultVersioningConfiguration]
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: !If [!Equals [!Ref PublicAccessBlockConfiguration, ""], !Ref PublicAccessBlockConfiguration, !Ref DefaultPublicAccessBlockConfiguration]
+        BlockPublicPolicy: !If [!Equals [!Ref PublicAccessBlockConfiguration, ""], !Ref PublicAccessBlockConfiguration, !Ref DefaultPublicAccessBlockConfiguration]
+        IgnorePublicAcls: !If [!Equals [!Ref PublicAccessBlockConfiguration, ""], !Ref PublicAccessBlockConfiguration, !Ref DefaultPublicAccessBlockConfiguration]
+        RestrictPublicBuckets: !If [!Equals [!Ref PublicAccessBlockConfiguration, ""], !Ref PublicAccessBlockConfiguration, !Ref DefaultPublicAccessBlockConfiguration]
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: !If [!Equals [!Ref BucketEncryption, ""], !Ref BucketEncryption, !Ref DefaultBucketEncryption]
+      LifecycleConfiguration: !If [!Equals [!Ref BucketLifecycleConfiguration, ""], !Ref BucketLifecycleConfiguration, !Ref DefaultBucketLifecycleConfiguration]
+      Tags: !If [!Equals [!Ref EnableTagging, "false"], !If [!Equals [!Ref Tags, ""], !Ref Tags, !Ref DefaultTags], !Ref EnableTagging]
+
+Outputs:
+  BucketNames:
+    Description: The names of the created S3 buckets
+    Value: !Join [",", !Transform
+      - 'Fn::Map'
+      - 
+        - 'Fn::GetAtt'
+        - [Bucket, "Name"]
+        - !Ref MyBuckets
+    ]

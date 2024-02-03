@@ -1,0 +1,78 @@
+name: aws-cloud-infra-pipeline
+
+on:
+  pull_request_target:
+    types:
+      - closed
+    branches:
+      - main
+    paths:
+      - 'aws-cloud-infra/*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run aws-cloud-infra-network-pipeline
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const branch = github.context.payload.ref.split('/').pop();
+            if (branch === 'main' || branch === 'dev') {
+              const response = await octokit.actions.createWorkflowDispatch({
+                owner: 'nick-aws-k',
+                repo: 'data_ingestion',
+                workflow_id: 'aws-cloud-infra-network-pipeline.yml',
+                ref: branch
+              });
+              console.log(response);
+            }
+
+      - name: Run aws-cloud-infra-iam-pipeline
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const branch = github.context.payload.ref.split('/').pop();
+            if (branch === 'main' || branch === 'dev') {
+              const response = await octokit.actions.createWorkflowDispatch({
+                owner: 'nick-aws-k',
+                repo: 'data_ingestion',
+                workflow_id: 'aws-cloud-infra-iam-pipeline.yml',
+                ref: branch
+              });
+              console.log(response);
+            }
+
+      - name: Run aws-cloud-infra-s3-pipeline
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const branch = github.context.payload.ref.split('/').pop();
+            if (branch === 'main' || branch === 'dev') {
+              const response = await octokit.actions.createWorkflowDispatch({
+                owner: 'nick-aws-k',
+                repo: 'data_ingestion',
+                workflow_id: 'aws-cloud-infra-s3-pipeline.yml',
+                ref: branch
+              });
+              console.log(response);
+            }
+
+      - name: Run aws-cloud-infra-glue-pipeline
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const branch = github.context.payload.ref.split('/').pop();
+            if (branch === 'main' || branch === 'dev') {
+              const response = await octokit.actions.createWorkflowDispatch({
+                owner: 'nick-aws-k',
+                repo: 'data_ingestion',
+                workflow_id: 'aws-cloud-infra-glue-pipeline.yml',
+                ref: branch
+              });
+              console.log(response);
+            }

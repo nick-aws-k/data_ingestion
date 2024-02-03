@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+  GlueJobRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: GlueJobRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [glue.amazonaws.com]
+            Action: ["sts:AssumeRole"]
+      Policies:
+        - PolicyName: GlueJobPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "s3:GetObject"
+                  - "s3:PutObject"
+                Resource: 
+                  - !Sub "arn:aws:s3:::${GlueJobBucket}/*"

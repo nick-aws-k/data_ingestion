@@ -1,0 +1,207 @@
+name: data-ingestion-elt-pipeline
+
+on:
+  pull_request_target:
+    types:
+      - closed
+    branches:
+      - dummy
+    paths:
+      - 'dummy/*'
+    
+  
+# Environment variables available to all jobs and steps in this workflow
+env:
+  PROJECT: elt
+  ENV: prod
+
+jobs:
+  deploy-network:
+    runs-on: ubuntu-latest
+    environment: prod-kna
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+    - name: Code checkout from github repo
+      uses: actions/checkout@v3
+      
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v3
+      with:
+        aws-region: us-east-1
+        role-to-assume: ${{secrets.GITHUBSTACKDEPLOYMENTROLE}}
+        role-session-name: GitHubRoleSession
+        
+    - name: Validate assume role
+      run: aws sts get-caller-identity --region us-east-1
+      
+    - name: Deploy cf-network-vpc-multi-tier CloudFormation Stack
+      # You may pin to the exact commit or the version.
+      # uses: aws-actions/aws-cloudformation-github-deploy@023f4ef60d0103d690f31a504cfda9f4f2d66265
+      uses: aws-actions/aws-cloudformation-github-deploy@v1
+      with:
+        # The name of the CloudFormation stack
+        name: cf-network-vpc-multi-tier
+        # The path or URL to the CloudFormation template
+        template: aws-cloud-infra/network/vpc-multi-tier.yml
+        # The parameters to override in the stack inputs. You can pass a comma-delimited list or a file URL. Comma-delimited list has each entry formatted as <ParameterName>=<ParameterValue> or <ParameterName>="<ParameterValue>,<ParameterValue>". A JSON file can be a local file with a "file://" prefix or remote URL. The file should look like: [ { "ParameterKey": "KeyPairName", "ParameterValue": "MyKey" }]
+        parameter-overrides: file://${{ github.workspace }}/aws-cloud-infra/network/vpc-multi-tier-param.json
+        # Indicates whether to execute to the change set or have it reviewed. Default to '0' (will execute the change set)
+        no-execute-changeset: # optional, default is 0
+        # Indicates whether to delete to a failed change set. Default to '0' (will delete the failed changeset)
+        no-delete-failed-changeset: # optional, default is 0
+        # If the CloudFormation change set is empty, do not fail. Defaults to '0' (will fail on empty change set)
+        no-fail-on-empty-changeset: "1"
+        # The comma-delimited list of stack template capabilities to acknowledge. Defaults to 'CAPABILITY_IAM'
+        capabilities: CAPABILITY_NAMED_IAM
+        # IAM role to create the CloudFormation stack
+        role-arn: ${{secrets.GITHUBSTACKDEPLOYMENTROLE}}
+
+  deploy-iam:
+    runs-on: ubuntu-latest
+    environment: prod-kna
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+    - name: Code checkout from github repo
+      uses: actions/checkout@v3
+      
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v3
+      with:
+        aws-region: us-east-1
+        role-to-assume: ${{secrets.GITHUBSTACKDEPLOYMENTROLE}}
+        role-session-name: GitHubRoleSession
+        
+    - name: Validate assume role
+      run: aws sts get-caller-identity --region us-east-1
+      
+    - name: Deploy cf-iam-service-role CloudFormation Stack
+      # You may pin to the exact commit or the version.
+      # uses: aws-actions/aws-cloudformation-github-deploy@023f4ef60d0103d690f31a504cfda9f4f2d66265
+      uses: aws-actions/aws-cloudformation-github-deploy@v1
+      with:
+        # The name of the CloudFormation stack
+        name: cf-iam-service-role
+        # The path or URL to the CloudFormation template
+        template: aws-cloud-infra\iam\service-roles.yml
+        # The parameters to override in the stack inputs. You can pass a comma-delimited list or a file URL. Comma-delimited list has each entry formatted as <ParameterName>=<ParameterValue> or <ParameterName>="<ParameterValue>,<ParameterValue>". A JSON file can be a local file with a "file://" prefix or remote URL. The file should look like: [ { "ParameterKey": "KeyPairName", "ParameterValue": "MyKey" }]
+        parameter-overrides: file://${{ github.workspace }}/aws-cloud-infra\iam\service-roles-param.json
+        # Indicates whether to execute to the change set or have it reviewed. Default to '0' (will execute the change set)
+        no-execute-changeset: # optional, default is 0
+        # Indicates whether to delete to a failed change set. Default to '0' (will delete the failed changeset)
+        no-delete-failed-changeset: # optional, default is 0
+        # If the CloudFormation change set is empty, do not fail. Defaults to '0' (will fail on empty change set)
+        no-fail-on-empty-changeset: "1"
+        # The comma-delimited list of stack template capabilities to acknowledge. Defaults to 'CAPABILITY_IAM'
+        capabilities: CAPABILITY_NAMED_IAM
+        # IAM role to create the CloudFormation stack
+        role-arn: ${{secrets.GITHUBSTACKDEPLOYMENTROLE}}
+
+    - name: Deploy cf-iam-user-role CloudFormation Stack
+      # You may pin to the exact commit or the version.
+      # uses: aws-actions/aws-cloudformation-github-deploy@023f4ef60d0103d690f31a504cfda9f4f2d66265
+      uses: aws-actions/aws-cloudformation-github-deploy@v1
+      with:
+        # The name of the CloudFormation stack
+        name: cf-iam-user-role
+        # The path or URL to the CloudFormation template
+        template: aws-cloud-infra\iam\user-roles.yml
+        # The parameters to override in the stack inputs. You can pass a comma-delimited list or a file URL. Comma-delimited list has each entry formatted as <ParameterName>=<ParameterValue> or <ParameterName>="<ParameterValue>,<ParameterValue>". A JSON file can be a local file with a "file://" prefix or remote URL. The file should look like: [ { "ParameterKey": "KeyPairName", "ParameterValue": "MyKey" }]
+        parameter-overrides: file://${{ github.workspace }}/aws-cloud-infra\iam\user-roles-param.json
+        # Indicates whether to execute to the change set or have it reviewed. Default to '0' (will execute the change set)
+        no-execute-changeset: # optional, default is 0
+        # Indicates whether to delete to a failed change set. Default to '0' (will delete the failed changeset)
+        no-delete-failed-changeset: # optional, default is 0
+        # If the CloudFormation change set is empty, do not fail. Defaults to '0' (will fail on empty change set)
+        no-fail-on-empty-changeset: "1"
+        # The comma-delimited list of stack template capabilities to acknowledge. Defaults to 'CAPABILITY_IAM'
+        capabilities: CAPABILITY_NAMED_IAM
+        # IAM role to create the CloudFormation stack
+        role-arn: ${{secrets.GITHUBSTACKDEPLOYMENTROLE}}
+        
+  deploy-s3:
+    runs-on: ubuntu-latest
+    environment: prod-kna
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+    - name: Code checkout from github repo
+      uses: actions/checkout@v3
+      
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v3
+      with:
+        aws-region: us-east-1
+        role-to-assume: ${{secrets.GITHUBSTACKDEPLOYMENTROLE}}
+        role-session-name: GitHubRoleSession
+        
+    - name: Validate assume role
+      run: aws sts get-caller-identity --region us-east-1
+      
+    - name: Deploy cf-s3-scr-bucket CloudFormation Stack
+      # You may pin to the exact commit or the version.
+      # uses: aws-actions/aws-cloudformation-github-deploy@023f4ef60d0103d690f31a504cfda9f4f2d66265
+      uses: aws-actions/aws-cloudformation-github-deploy@v1
+      with:
+        # The name of the CloudFormation stack
+        name: cf-s3-scr-bucket
+        # The path or URL to the CloudFormation template
+        template: aws-cloud-infra\s3\scr-bucket.yml
+        # The parameters to override in the stack inputs. You can pass a comma-delimited list or a file URL. Comma-delimited list has each entry formatted as <ParameterName>=<ParameterValue> or <ParameterName>="<ParameterValue>,<ParameterValue>". A JSON file can be a local file with a "file://" prefix or remote URL. The file should look like: [ { "ParameterKey": "KeyPairName", "ParameterValue": "MyKey" }]
+        parameter-overrides: file://${{ github.workspace }}/aws-cloud-infra\s3\scr-bucket-param.json
+        # Indicates whether to execute to the change set or have it reviewed. Default to '0' (will execute the change set)
+        no-execute-changeset: # optional, default is 0
+        # Indicates whether to delete to a failed change set. Default to '0' (will delete the failed changeset)
+        no-delete-failed-changeset: # optional, default is 0
+        # If the CloudFormation change set is empty, do not fail. Defaults to '0' (will fail on empty change set)
+        no-fail-on-empty-changeset: "1"
+        # The comma-delimited list of stack template capabilities to acknowledge. Defaults to 'CAPABILITY_IAM'
+        capabilities: CAPABILITY_NAMED_IAM
+        # IAM role to create the CloudFormation stack
+        role-arn: ${{secrets.GITHUBSTACKDEPLOYMENTROLE}}
+
+  deploy-glue:
+    runs-on: ubuntu-latest
+    environment: prod-kna
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+    - name: Code checkout from github repo
+      uses: actions/checkout@v3
+      
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v3
+      with:
+        aws-region: us-east-1
+        role-to-assume: ${{secrets.GITHUBSTACKDEPLOYMENTROLE}}
+        role-session-name: GitHubRoleSession
+        
+    - name: Validate assume role
+      run: aws sts get-caller-identity --region us-east-1
+      
+    - name: Deploy cf-glue-data-ingestion-job CloudFormation Stack
+      # You may pin to the exact commit or the version.
+      # uses: aws-actions/aws-cloudformation-github-deploy@023f4ef60d0103d690f31a504cfda9f4f2d66265
+      uses: aws-actions/aws-cloudformation-github-deploy@v1
+      with:
+        # The name of the CloudFormation stack
+        name: cf-glue-data-ingestion-job
+        # The path or URL to the CloudFormation template
+        template: aws-cloud-infra\glue\data-ingestion-job.yml
+        # The parameters to override in the stack inputs. You can pass a comma-delimited list or a file URL. Comma-delimited list has each entry formatted as <ParameterName>=<ParameterValue> or <ParameterName>="<ParameterValue>,<ParameterValue>". A JSON file can be a local file with a "file://" prefix or remote URL. The file should look like: [ { "ParameterKey": "KeyPairName", "ParameterValue": "MyKey" }]
+        parameter-overrides: file://${{ github.workspace }}/aws-cloud-infra\glue\data-ingestion-job-param.json
+        # Indicates whether to execute to the change set or have it reviewed. Default to '0' (will execute the change set)
+        no-execute-changeset: # optional, default is 0
+        # Indicates whether to delete to a failed change set. Default to '0' (will delete the failed changeset)
+        no-delete-failed-changeset: # optional, default is 0
+        # If the CloudFormation change set is empty, do not fail. Defaults to '0' (will fail on empty change set)
+        no-fail-on-empty-changeset: "1"
+        # The comma-delimited list of stack template capabilities to acknowledge. Defaults to 'CAPABILITY_IAM'
+        capabilities: CAPABILITY_NAMED_IAM
+        # IAM role to create the CloudFormation stack
+        role-arn: ${{secrets.GITHUBSTACKDEPLOYMENTROLE}}
