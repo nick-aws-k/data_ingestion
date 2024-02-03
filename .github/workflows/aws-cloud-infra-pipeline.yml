@@ -6,8 +6,6 @@ on:
       - closed
     branches:
       - main
-    paths:
-      - 'aws-cloud-infra/*'
 
 jobs:
   build:

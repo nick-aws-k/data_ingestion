@@ -6,10 +6,7 @@ on:
       - "aws-cloud-infra-pipeline"
     types:
       - requested
-    paths:
-      - 'aws-cloud-infra/s3/*'
-    
-  
+
 # Environment variables available to all jobs and steps in this workflow
 env:
   PROJECT: elt
