@@ -1,8 +1,8 @@
 [{
+  "pCompanyShortName": "virso",
+  "pProjectShortName": "datalake",
   "pBuckets": {
     "bucket1": {
-      "pCompanyShortName": "virso",
-      "pProjectShortName": "datalake",
       "pBucketName": "raw",
       "pAccessControl": "private",
       "pVersioningConfiguration": "Enabled",
@@ -23,8 +23,6 @@
       }
     },
     "bucket2": {
-      "pCompanyShortName": "virso",
-      "pProjectShortName": "datalake",
       "pBucketName": "land",
       "pAccessControl": "private",
       "pVersioningConfiguration": "Enabled",
