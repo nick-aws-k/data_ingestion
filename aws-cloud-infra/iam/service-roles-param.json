@@ -1,5 +1,5 @@
 [
-    { "ParameterKey": "ServiceRole", "ParameterValue": "my-service-role" },
+    { "ParameterKey": "ServiceRoleName", "ParameterValue": "data-ingestion-role" },
     { "ParameterKey": "LambdaEffect", "ParameterValue": "Allow" },
     { "ParameterKey": "GlueEffect", "ParameterValue": "Allow" },
     { "ParameterKey": "AthenaEffect", "ParameterValue": "Allow" },
