@@ -29,6 +29,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - "s3:GetObject"
+                  # Add other necessary actions and resources here
 
   GlueJob:
     Type: AWS::Glue::Job
