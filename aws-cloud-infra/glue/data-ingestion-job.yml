@@ -1,8 +1,12 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
+Conditions:
+  CreateGlueJobBucket: !Not [!Condition BucketExists]
+
 Resources:
   GlueJobBucket:
     Type: AWS::S3::Bucket
+    Condition: CreateGlueJobBucket
     Properties:
       BucketName: project-test-bucket-xyz
 
