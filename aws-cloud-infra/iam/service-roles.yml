@@ -185,4 +185,4 @@ Outputs:
     Description: The name of the service role
     Value: !Ref ServiceRole
     Export:
-      Name: ServiceRoleName
+      Name: !Sub '${AWS::StackName}::${pServiceRoleName}'
