@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
 Parameters:
-  ServiceRole:
+  ServiceRoleName:
     Type: AWS::IAM::Role::RoleName
     Description: The name of an existing IAM role
   LambdaEffect:
@@ -86,7 +86,7 @@ Resources:
   ServiceRole:
     Type: 'AWS::IAM::Role'
     Properties:
-      RoleName: !Ref ServiceRole
+      RoleName: !Ref ServiceRoleName
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -140,9 +140,9 @@ Resources:
     Type: 'AWS::IAM::Policy'
     DependsOn: !Ref ServiceRole
     Properties:
-      PolicyName: !Sub '${ServiceRole}Policy'
+      PolicyName: !Sub '${ServiceRoleName}Policy'
       Roles:
-        - !Ref ServiceRole
+        - !Ref ServiceRoleName
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
