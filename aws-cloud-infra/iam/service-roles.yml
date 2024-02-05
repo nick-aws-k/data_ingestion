@@ -138,7 +138,7 @@ Resources:
 
   ServiceRolePolicy:
     Type: 'AWS::IAM::Policy'
-    DependsOn: !Ref ServiceRole
+    DependsOn: !Ref ServiceRoleName
     Properties:
       PolicyName: !Sub '${ServiceRoleName}Policy'
       Roles:
