@@ -2,7 +2,7 @@ AWSTemplateFormatVersion: '2010-09-09'
 
 Parameters:
   ServiceRoleName:
-    Type: AWS::IAM::Role::RoleName
+    Type: String
     Description: The name of an existing IAM role
   LambdaEffect:
     Type: String
