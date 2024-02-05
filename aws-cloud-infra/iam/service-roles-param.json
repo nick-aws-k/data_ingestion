@@ -1,15 +1,15 @@
 [
-    { "ParameterKey": "ServiceRoleName", "ParameterValue": "data-ingestion-role" },
-    { "ParameterKey": "LambdaEffect", "ParameterValue": "Allow" },
-    { "ParameterKey": "GlueEffect", "ParameterValue": "Allow" },
-    { "ParameterKey": "AthenaEffect", "ParameterValue": "Allow" },
-    { "ParameterKey": "S3Effect", "ParameterValue": "Allow" },
-    { "ParameterKey": "EventsEffect", "ParameterValue": "Allow" },
-    { "ParameterKey": "CloudwatchEffect", "ParameterValue": "Allow" },
-    { "ParameterKey": "SNSEffect", "ParameterValue": "Allow" },
-    { "ParameterKey": "RDSEffect", "ParameterValue": "Allow" },
-    { "ParameterKey": "RedshiftEffect", "ParameterValue": "Allow" },
-    { "ParameterKey": "SQSEffect", "ParameterValue": "Allow" },
-    { "ParameterKey": "LakeformationEffect", "ParameterValue": "Allow" }
+    { "ParameterKey": "pServiceRoleName", "ParameterValue": "data-ingestion-service-role" },
+    { "ParameterKey": "pLambdaEffect", "ParameterValue": "Allow" },
+    { "ParameterKey": "pGlueEffect", "ParameterValue": "Allow" },
+    { "ParameterKey": "pAthenaEffect", "ParameterValue": "Allow" },
+    { "ParameterKey": "pS3Effect", "ParameterValue": "Allow" },
+    { "ParameterKey": "pEventsEffect", "ParameterValue": "Allow" },
+    { "ParameterKey": "pCloudwatchEffect", "ParameterValue": "Allow" },
+    { "ParameterKey": "pSNSEffect", "ParameterValue": "Allow" },
+    { "ParameterKey": "pRDSEffect", "ParameterValue": "Allow" },
+    { "ParameterKey": "pRedshiftEffect", "ParameterValue": "Allow" },
+    { "ParameterKey": "pSQSEffect", "ParameterValue": "Allow" },
+    { "ParameterKey": "pLakeformationEffect", "ParameterValue": "Allow" }
   ]
   

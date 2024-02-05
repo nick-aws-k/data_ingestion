@@ -1,80 +1,80 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
 Parameters:
-  ServiceRoleName:
+  pServiceRoleName:
     Type: String
     Description: The name of an IAM role
-  LambdaEffect:
+  pLambdaEffect:
     Type: String
     Default: Deny
     AllowedValues:
       - Allow
       - Deny
     Description: The effect of the statement for the Lambda policy document
-  GlueEffect:
+  pGlueEffect:
     Type: String
     Default: Deny
     AllowedValues:
       - Allow
       - Deny
     Description: The effect of the statement for the Glue policy document
-  AthenaEffect:
+  pAthenaEffect:
     Type: String
     Default: Deny
     AllowedValues:
       - Allow
       - Deny
     Description: The effect of the statement for the Athena policy document
-  S3Effect:
+  pS3Effect:
     Type: String
     Default: Deny
     AllowedValues:
       - Allow
       - Deny
     Description: The effect of the statement for the S3 policy document
-  EventsEffect:
+  pEventsEffect:
     Type: String
     Default: Deny
     AllowedValues:
       - Allow
       - Deny
     Description: The effect of the statement for the Events policy document
-  CloudwatchEffect:
+  pCloudwatchEffect:
     Type: String
     Default: Deny
     AllowedValues:
       - Allow
       - Deny
     Description: The effect of the statement for the Cloudwatch policy document
-  SNSEffect:
+  pSNSEffect:
     Type: String
     Default: Deny
     AllowedValues:
       - Allow
       - Deny
     Description: The effect of the statement for the SNS policy document
-  RDSEffect:
+  pRDSEffect:
     Type: String
     Default: Deny
     AllowedValues:
       - Allow
       - Deny
     Description: The effect of the statement for the RDS policy document
-  RedshiftEffect:
+  pRedshiftEffect:
     Type: String
     Default: Deny
     AllowedValues:
       - Allow
       - Deny
     Description: The effect of the statement for the Redshift policy document
-  SQSEffect:
+  pSQSEffect:
     Type: String
     Default: Deny
     AllowedValues:
       - Allow
       - Deny
     Description: The effect of the statement for the SQS policy document
-  LakeformationEffect:
+  pLakeformationEffect:
     Type: String
     Default: Deny
     AllowedValues:
@@ -83,100 +83,106 @@ Parameters:
     Description: The effect of the statement for the Lakeformation policy document
 
 Resources:
-  ServiceRole:
+  rServiceRole:
     Type: 'AWS::IAM::Role'
     Properties:
-      RoleName: !Ref ServiceRoleName
+      RoleName: !Ref pServiceRoleName
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
-          - Effect: !Ref LambdaEffect
+          - Effect: !Ref pLambdaEffect
             Principal:
               Service: 'lambda.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: !Ref GlueEffect
+          - Effect: !Ref pGlueEffect
             Principal:
               Service: 'glue.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: !Ref AthenaEffect
+          - Effect: !Ref pAthenaEffect
             Principal:
               Service: 'athena.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: !Ref S3Effect
+          - Effect: !Ref pS3Effect
             Principal:
               Service: 's3.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: !Ref EventsEffect
+          - Effect: !Ref pEventsEffect
             Principal:
               Service: 'events.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: !Ref CloudwatchEffect
+          - Effect: !Ref pCloudwatchEffect
             Principal:
               Service: 'cloudwatch.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: !Ref SNSEffect
+          - Effect: !Ref pSNSEffect
             Principal:
               Service: 'sns.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: !Ref RDSEffect
+          - Effect: !Ref pRDSEffect
             Principal:
               Service: 'rds.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: !Ref RedshiftEffect
+          - Effect: !Ref pRedshiftEffect
             Principal:
               Service: 'redshift.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: !Ref SQSEffect
+          - Effect: !Ref pSQSEffect
             Principal:
               Service: 'sqs.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: !Ref LakeformationEffect
+          - Effect: !Ref pLakeformationEffect
             Principal:
               Service: 'lakeformation.amazonaws.com'
             Action: 'sts:AssumeRole'
           # Add other trusted services here
 
-  ServiceRolePolicy:
+  rServiceRolePolicy:
     Type: 'AWS::IAM::Policy'
-    DependsOn: ServiceRole
+    DependsOn: rServiceRole
     Properties:
-      PolicyName: !Sub '${ServiceRoleName}Policy'
+      PolicyName: !Sub '${pServiceRoleName}-policy'
       Roles:
-        - !Ref ServiceRoleName
+        - !Ref pServiceRoleName
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
-          - Effect: !Ref LambdaEffect
+          - Effect: !Ref pLambdaEffect
             Action: 'lambda:*'
             Resource: '*'
-          - Effect: !Ref GlueEffect
+          - Effect: !Ref pGlueEffect
             Action: 'glue:*'
             Resource: '*'
-          - Effect: !Ref AthenaEffect
+          - Effect: !Ref pAthenaEffect
             Action: 'athena:*'
             Resource: '*'
-          - Effect: !Ref S3Effect
+          - Effect: !Ref pS3Effect
             Action: 's3:*'
             Resource: '*'
-          - Effect: !Ref EventsEffect
+          - Effect: !Ref pEventsEffect
             Action: 'events:*'
             Resource: '*'
-          - Effect: !Ref CloudwatchEffect
+          - Effect: !Ref pCloudwatchEffect
             Action: 'cloudwatch:*'
             Resource: '*'
-          - Effect: !Ref SNSEffect
+          - Effect: !Ref pSNSEffect
             Action: 'sns:*'
             Resource: '*'
-          - Effect: !Ref RDSEffect
+          - Effect: !Ref pRDSEffect
             Action: 'rds:*'
             Resource: '*'
-          - Effect: !Ref RedshiftEffect
+          - Effect: !Ref pRedshiftEffect
             Action: 'redshift:*'
             Resource: '*'
-          - Effect: !Ref SQSEffect
+          - Effect: !Ref pSQSEffect
             Action: 'sqs:*'
             Resource: '*'
-          - Effect: !Ref LakeformationEffect
+          - Effect: !Ref pLakeformationEffect
             Action: 'lakeformation:*'
             Resource: '*'
           # Add other permissions for the specified services here
+Outputs:
+  oServiceRoleName:
+    Description: The name of the service role
+    Value: !Ref ServiceRole
+    Export:
+      Name: ServiceRoleName
