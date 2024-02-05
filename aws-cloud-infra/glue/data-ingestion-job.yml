@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
 Conditions:
-  CreateGlueJobBucket: !Not [!Condition BucketExists]
+  BucketExists: !Not [!Condition CreateGlueJobBucket]
 
 Resources:
   GlueJobBucket:
