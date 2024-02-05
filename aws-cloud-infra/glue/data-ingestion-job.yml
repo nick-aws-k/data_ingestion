@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
 Conditions:
-  BucketExists: !Not [!Condition CreateGlueJobBucket]
+  CreateGlueJobBucket: !Not [!Equals [!Ref "AWS::Region", "us-east-1"]]  # Adjust the condition based on your criteria
 
 Resources:
   GlueJobBucket:
@@ -43,6 +43,3 @@ Resources:
               - Effect: Allow
                 Action:
                   - "s3:GetObject"
-                  - "s3:PutObject"
-                Resource: 
-                  - !Sub "arn:aws:s3:::${GlueJobBucket}/*"
