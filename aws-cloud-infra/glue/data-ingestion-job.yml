@@ -1,14 +1,11 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
-Conditions:
-  CreateGlueJobBucket: !Not [!Equals [!Ref "AWS::Region", "us-east-1"]]
-
 Resources:
   GlueJobBucket:
     Type: AWS::S3::Bucket
-    Condition: CreateGlueJobBucket
     Properties:
       BucketName: project-test-bucket-xyz
+      DeletionPolicy: Retain  # Retain the bucket on stack deletion
 
   GlueJobRole:
     Type: AWS::IAM::Role
@@ -19,8 +16,10 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              Service: [glue.amazonaws.com]
-            Action: ["sts:AssumeRole"]
+              Service: 
+                - glue.amazonaws.com
+            Action: 
+              - "sts:AssumeRole"
       Policies:
         - PolicyName: GlueJobPolicy
           PolicyDocument:
@@ -29,7 +28,8 @@ Resources:
               - Effect: Allow
                 Action:
                   - "s3:GetObject"
-                  # Add other necessary actions and resources here
+                Resource: !Sub "arn:aws:s3:::${GlueJobBucket}/*"
+                # Add other necessary actions and resources here
 
   GlueJob:
     Type: AWS::Glue::Job
