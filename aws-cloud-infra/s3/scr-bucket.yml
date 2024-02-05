@@ -1,49 +1,55 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Include
 Parameters:
-  CompanyName:
+  pCompanyShortName:
     Type: String
     Description: Name of Company for which the bucket is provisioning
-  ProjectName:
+    Default: virso
+  pProjectShortName:
     Type: String
     Description: Name of Project for which the bucket is provisioning
-  Buckets:
+    Default: datalake
+  pBuckets:
     Type: Json
     Description: The properties for multiple S3 buckets.
-  DefaultAccessControl:
-    Type: String
-    Description: The default access control for S3 buckets.
-    AllowedValues:
-      - private
-      - public-read
-    Default: private
-  DefaultVersioningConfiguration:
+    Default: "s3://my-bucket/buckets.json" # An external file that contains the JSON parameters for the buckets
+  pDefaultVersioningConfiguration:
     Type: String
     Description: The default versioning configuration for S3 buckets.
     AllowedValues:
       - Enabled
       - Suspended
     Default: Enabled
-  DefaultPublicAccessBlockConfiguration:
+  pDefaultPublicAccessBlockConfiguration:
     Type: String
     Description: The default public access block configuration for S3 buckets.
     AllowedValues:
       - true
       - false
     Default: true
-  DefaultBucketEncryption:
+  pDefaultBucketEncryption:
     Type: String
     Description: The default bucket encryption for S3 buckets.
     AllowedValues:
       - AES256
       - aws:kms
     Default: AES256
-  DefaultBucketLifecycleConfiguration:
+  pDefaultBucketLifecycleConfiguration:
     Type: Json
     Description: The default bucket lifecycle configuration for S3 buckets.
-  DefaultTags:
+    Default: "s3://my-bucket/lifecycle.json" # An external file that contains the JSON configuration for the lifecycle rules
+  pDefaultTags:
     Type: Json
     Description: The default tags to apply to S3 buckets.
-  EnableTagging:
+    Default: {
+          "Department": "Global-IT",
+          "CompanyName": "virso",
+          "ProjectName": "datalake"
+        }
+  pTags:
+    Type: Json
+    Description: The default tags to apply to S3 buckets.
+  pEnableTagging:
     Type: String
     Description: Whether to enable tagging for S3 buckets.
     AllowedValues:
@@ -52,32 +58,43 @@ Parameters:
     Default: true
 
 Resources:
-  MyBuckets:
+  rMyBuckets:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Ref BucketName
-      AccessControl: !If [!Equals [!Ref AccessControl, ""], !Ref AccessControl, !Ref DefaultAccessControl]
+      BucketName: !Sub '${pCompanyShortName}-${pProjectShortName}-${pBucketName}-bucket'
       VersioningConfiguration:
-        Status: !If [!Equals [!Ref VersioningConfiguration, ""], !Ref VersioningConfiguration, !Ref DefaultVersioningConfiguration]
+        Status: !If [!Equals [!Ref pVersioningConfiguration, AWS::NoValue], !Ref pVersioningConfiguration, !Ref pDefaultVersioningConfiguration]
       PublicAccessBlockConfiguration:
-        BlockPublicAcls: !If [!Equals [!Ref PublicAccessBlockConfiguration, ""], !Ref PublicAccessBlockConfiguration, !Ref DefaultPublicAccessBlockConfiguration]
-        BlockPublicPolicy: !If [!Equals [!Ref PublicAccessBlockConfiguration, ""], !Ref PublicAccessBlockConfiguration, !Ref DefaultPublicAccessBlockConfiguration]
-        IgnorePublicAcls: !If [!Equals [!Ref PublicAccessBlockConfiguration, ""], !Ref PublicAccessBlockConfiguration, !Ref DefaultPublicAccessBlockConfiguration]
-        RestrictPublicBuckets: !If [!Equals [!Ref PublicAccessBlockConfiguration, ""], !Ref PublicAccessBlockConfiguration, !Ref DefaultPublicAccessBlockConfiguration]
+        BlockPublicAcls: !If [!Equals [!Ref pPublicAccessBlockConfiguration, AWS::NoValue], !Ref pPublicAccessBlockConfiguration, !Ref pDefaultPublicAccessBlockConfiguration]
+        BlockPublicPolicy: !If [!Equals [!Ref pPublicAccessBlockConfiguration, AWS::NoValue], !Ref pPublicAccessBlockConfiguration, !Ref pDefaultPublicAccessBlockConfiguration]
+        IgnorePublicAcls: !If [!Equals [!Ref pPublicAccessBlockConfiguration, AWS::NoValue], !Ref pPublicAccessBlockConfiguration, !Ref pDefaultPublicAccessBlockConfiguration]
+        RestrictPublicBuckets: !If [!Equals [!Ref pPublicAccessBlockConfiguration, AWS::NoValue], !Ref pPublicAccessBlockConfiguration, !Ref pDefaultPublicAccessBlockConfiguration]
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
-              SSEAlgorithm: !If [!Equals [!Ref BucketEncryption, ""], !Ref BucketEncryption, !Ref DefaultBucketEncryption]
-      LifecycleConfiguration: !If [!Equals [!Ref BucketLifecycleConfiguration, ""], !Ref BucketLifecycleConfiguration, !Ref DefaultBucketLifecycleConfiguration]
-      Tags: !If [!Equals [!Ref EnableTagging, "false"], !If [!Equals [!Ref Tags, ""], !Ref Tags, !Ref DefaultTags], !Ref EnableTagging]
+              SSEAlgorithm: !If [!Equals [!Ref pBucketEncryption, AWS::NoValue], !Ref pBucketEncryption, !Ref pDefaultBucketEncryption]
+      LifecycleConfiguration: !If [!Equals [!Ref pBucketLifecycleConfiguration, AWS::NoValue], !Ref pBucketLifecycleConfiguration, !Ref pDefaultBucketLifecycleConfiguration]
+      Tags: !If [!Equals [!Ref pEnableTagging, "false"], !If [!Equals [!Ref pTags, AWS::NoValue], !Ref pTags, !Ref pDefaultTags], !Ref AWS::NoValue]
+
+  rMyBucketPolicies:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref rMyBuckets
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: !If [!Equals [!Ref pAccessControl, AWS::NoValue], !Ref pAccessControl, !Ref pDefaultAccessControl]
+            Principal: '*'
+            Action: 's3:*'
+            Resource: !Sub 'arn:aws:s3:::${rMyBuckets}/*'
 
 Outputs:
-  BucketNames:
+  oBucketNames:
     Description: The names of the created S3 buckets
     Value: !Join [",", !Transform
       - 'Fn::Map'
       - 
         - 'Fn::GetAtt'
         - [Bucket, "Name"]
-        - !Ref MyBuckets
+        - !Ref rMyBuckets
     ]
