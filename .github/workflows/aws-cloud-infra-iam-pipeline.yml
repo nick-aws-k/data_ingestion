@@ -6,6 +6,8 @@ on:
       - "aws-cloud-infra-pipeline"
     types:
       - requested
+    paths:
+      - 'aws-cloud-infra/iam/*'
     
   
 # Environment variables available to all jobs and steps in this workflow
