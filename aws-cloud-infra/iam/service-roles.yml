@@ -98,31 +98,31 @@ Resources:
             Principal:
               Service: 'glue.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: !Ref AssumeRoleEffect
+          - Effect: !Ref AthenaEffect
             Principal:
               Service: 'athena.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: !Ref AssumeRoleEffect
+          - Effect: !Ref S3Effect
             Principal:
               Service: 's3.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: !Ref AssumeRoleEffect
+          - Effect: !Ref EventsEffect
             Principal:
               Service: 'events.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: !Ref AssumeRoleEffect
+          - Effect: !Ref CloudwatchEffect
             Principal:
               Service: 'cloudwatch.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: !Ref AssumeRoleEffect
+          - Effect: !Ref SNSEffect
             Principal:
               Service: 'sns.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: !Ref AssumeRoleEffect
+          - Effect: !Ref RDSEffect
             Principal:
               Service: 'rds.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: !Ref AssumeRoleEffect
+          - Effect: !Ref RedshiftEffect
             Principal:
               Service: 'redshift.amazonaws.com'
             Action: 'sts:AssumeRole'
