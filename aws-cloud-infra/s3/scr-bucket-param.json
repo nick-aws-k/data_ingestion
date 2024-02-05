@@ -1,54 +1,47 @@
-{
-  "Buckets": [
-    {
-      "BucketName": "raw",
-      "AccessControl": "private",
-      "VersioningConfiguration": "Enabled",
-      "PublicAccessBlockConfiguration": true,
-      "BucketEncryption": "AES256",
-      "LifecycleConfiguration": {
+[{
+  "pCompanyShortName": "virso",
+  "pProjectShortName": "datalake",
+  "pBuckets": {
+    "bucket1": {
+      "pBucketName": "raw",
+      "pAccessControl": "private",
+      "pVersioningConfiguration": "Enabled",
+      "pPublicAccessBlockConfiguration": "false",
+      "pBucketEncryption": "AES256",
+      "pBucketLifecycleConfiguration": {
         "Rules": [
           {
-            "ID": "Rule1",
-            "Prefix": "logs/",
-            "Status": "Enabled",
-            "ExpirationInDays": 30
+            "ExpirationInDays": 90,
+            "Status": "Enabled"
           }
         ]
       },
-      "Tags": {
-        "solution": "Ingestion-raw-bucket",
+      "pTags": {
         "Department": "Global-IT",
-        "CompanyName": "DataSoftTech",
-        "ProjectName": "Ingestion-Framework"
-      },
-      "CompanyName": "DataSoftTech",
-      "ProjectName": "Ingestion-Framework"
+        "CompanyName": "virso",
+        "ProjectName": "datalake"
+      }
     },
-    {
-      "BucketName": "land",
-      "AccessControl": "public-read",
-      "VersioningConfiguration": "Suspended",
-      "PublicAccessBlockConfiguration": false,
-      "BucketEncryption": "AES256",
-      "LifecycleConfiguration": {
+    "bucket2": {
+      "pBucketName": "land",
+      "pAccessControl": "private",
+      "pVersioningConfiguration": "Enabled",
+      "pPublicAccessBlockConfiguration": "true",
+      "pBucketEncryption": "AES256",
+      "pBucketLifecycleConfiguration": {
         "Rules": [
           {
-            "ID": "Rule2",
-            "Prefix": "backups/",
-            "Status": "Enabled",
-            "ExpirationInDays": 90
+            "NoncurrentVersionExpirationInDays": 90,
+            "Status": "Enabled"
           }
         ]
       },
-      "Tags": {
-        "Name": "Ingestion-land-bucket",
+      "pTags": {
         "Department": "Global-IT",
-        "CompanyName": "DataSoftTech",
-        "ProjectName": "Ingestion-Framework"
-      },
-      "CompanyName": "DataSoftTech",
-      "ProjectName": "Ingestion-Framework"
+        "CompanyName": "virso",
+        "ProjectName": "datalake"
+      }
     }
-  ]
-}
+  },
+  "pEnableTagging": "true"
+}]
