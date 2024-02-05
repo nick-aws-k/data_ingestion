@@ -1,96 +1,182 @@
 AWSTemplateFormatVersion: '2010-09-09'
 
+Parameters:
+  ServiceRole:
+    Type: AWS::IAM::Role::RoleName
+    Description: The name of an existing IAM role
+  LambdaEffect:
+    Type: String
+    Default: Deny
+    AllowedValues:
+      - Allow
+      - Deny
+    Description: The effect of the statement for the Lambda policy document
+  GlueEffect:
+    Type: String
+    Default: Deny
+    AllowedValues:
+      - Allow
+      - Deny
+    Description: The effect of the statement for the Glue policy document
+  AthenaEffect:
+    Type: String
+    Default: Deny
+    AllowedValues:
+      - Allow
+      - Deny
+    Description: The effect of the statement for the Athena policy document
+  S3Effect:
+    Type: String
+    Default: Deny
+    AllowedValues:
+      - Allow
+      - Deny
+    Description: The effect of the statement for the S3 policy document
+  EventsEffect:
+    Type: String
+    Default: Deny
+    AllowedValues:
+      - Allow
+      - Deny
+    Description: The effect of the statement for the Events policy document
+  CloudwatchEffect:
+    Type: String
+    Default: Deny
+    AllowedValues:
+      - Allow
+      - Deny
+    Description: The effect of the statement for the Cloudwatch policy document
+  SNSEffect:
+    Type: String
+    Default: Deny
+    AllowedValues:
+      - Allow
+      - Deny
+    Description: The effect of the statement for the SNS policy document
+  RDSEffect:
+    Type: String
+    Default: Deny
+    AllowedValues:
+      - Allow
+      - Deny
+    Description: The effect of the statement for the RDS policy document
+  RedshiftEffect:
+    Type: String
+    Default: Deny
+    AllowedValues:
+      - Allow
+      - Deny
+    Description: The effect of the statement for the Redshift policy document
+  SQSEffect:
+    Type: String
+    Default: Deny
+    AllowedValues:
+      - Allow
+      - Deny
+    Description: The effect of the statement for the SQS policy document
+  LakeformationEffect:
+    Type: String
+    Default: Deny
+    AllowedValues:
+      - Allow
+      - Deny
+    Description: The effect of the statement for the Lakeformation policy document
+
 Resources:
-  DataIngestionRole:
+  ServiceRole:
     Type: 'AWS::IAM::Role'
     Properties:
-      RoleName: 'data-ingestion-role'
+      RoleName: !Ref ServiceRole
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
-          - Effect: 'Allow'
+          - Effect: !Ref LambdaEffect
             Principal:
               Service: 'lambda.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: 'Allow'
+          - Effect: !Ref GlueEffect
             Principal:
               Service: 'glue.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: 'Allow'
+          - Effect: !Ref AssumeRoleEffect
             Principal:
               Service: 'athena.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: 'Allow'
+          - Effect: !Ref AssumeRoleEffect
             Principal:
               Service: 's3.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: 'Allow'
+          - Effect: !Ref AssumeRoleEffect
             Principal:
               Service: 'events.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: 'Allow'
+          - Effect: !Ref AssumeRoleEffect
             Principal:
               Service: 'cloudwatch.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: 'Allow'
+          - Effect: !Ref AssumeRoleEffect
             Principal:
               Service: 'sns.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: 'Allow'
+          - Effect: !Ref AssumeRoleEffect
             Principal:
               Service: 'rds.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: 'Allow'
+          - Effect: !Ref AssumeRoleEffect
             Principal:
               Service: 'redshift.amazonaws.com'
             Action: 'sts:AssumeRole'
-          - Effect: 'Allow'
+          - Effect: !Ref SQSEffect
+            Principal:
+              Service: 'sqs.amazonaws.com'
+            Action: 'sts:AssumeRole'
+          - Effect: !Ref LakeformationEffect
             Principal:
               Service: 'lakeformation.amazonaws.com'
             Action: 'sts:AssumeRole'
           # Add other trusted services here
 
-  DataIngestionRolePolicy:
+  ServiceRolePolicy:
     Type: 'AWS::IAM::Policy'
-    DependsOn: 'DataIngestionRole'
+    DependsOn: !Ref ServiceRole
     Properties:
-      PolicyName: 'DataIngestionRolePolicy'
+      PolicyName: !Sub '${ServiceRole}Policy'
       Roles:
-        - !Ref 'DataIngestionRole'
+        - !Ref ServiceRole
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
-          - Effect: 'Allow'
+          - Effect: !Ref LambdaEffect
             Action: 'lambda:*'
             Resource: '*'
-          - Effect: 'Allow'
+          - Effect: !Ref GlueEffect
             Action: 'glue:*'
             Resource: '*'
-          - Effect: 'Allow'
+          - Effect: !Ref AthenaEffect
             Action: 'athena:*'
             Resource: '*'
-          - Effect: 'Allow'
+          - Effect: !Ref S3Effect
             Action: 's3:*'
             Resource: '*'
-          - Effect: 'Allow'
+          - Effect: !Ref EventsEffect
             Action: 'events:*'
             Resource: '*'
-          - Effect: 'Allow'
+          - Effect: !Ref CloudwatchEffect
             Action: 'cloudwatch:*'
             Resource: '*'
-          - Effect: 'Allow'
+          - Effect: !Ref SNSEffect
             Action: 'sns:*'
             Resource: '*'
-          - Effect: 'Allow'
+          - Effect: !Ref RDSEffect
             Action: 'rds:*'
             Resource: '*'
-          - Effect: 'Allow'
+          - Effect: !Ref RedshiftEffect
             Action: 'redshift:*'
             Resource: '*'
-          - Effect: 'Allow'
+          - Effect: !Ref SQSEffect
             Action: 'sqs:*'
             Resource: '*'
-          - Effect: 'Allow'
+          - Effect: !Ref LakeformationEffect
             Action: 'lakeformation:*'
             Resource: '*'
           # Add other permissions for the specified services here

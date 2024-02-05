@@ -1,5 +1,15 @@
 [
-{ "ParameterKey": "pOrg", "ParameterValue": "virso" },
-{ "ParameterKey": "pSystem", "ParameterValue": "datalake" },
-{ "ParameterKey": "pVpcName", "ParameterValue": "vpc-multi-tier" }
-]
+    { "ParameterKey": "ServiceRole", "ParameterValue": "my-service-role" },
+    { "ParameterKey": "LambdaEffect", "ParameterValue": "Allow" },
+    { "ParameterKey": "GlueEffect", "ParameterValue": "Allow" },
+    { "ParameterKey": "AthenaEffect", "ParameterValue": "Allow" },
+    { "ParameterKey": "S3Effect", "ParameterValue": "Allow" },
+    { "ParameterKey": "EventsEffect", "ParameterValue": "Allow" },
+    { "ParameterKey": "CloudwatchEffect", "ParameterValue": "Allow" },
+    { "ParameterKey": "SNSEffect", "ParameterValue": "Allow" },
+    { "ParameterKey": "RDSEffect", "ParameterValue": "Allow" },
+    { "ParameterKey": "RedshiftEffect", "ParameterValue": "Allow" },
+    { "ParameterKey": "SQSEffect", "ParameterValue": "Allow" },
+    { "ParameterKey": "LakeformationEffect", "ParameterValue": "Allow" }
+  ]
+  
