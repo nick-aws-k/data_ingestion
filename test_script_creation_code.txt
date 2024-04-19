@@ -1,0 +1,30 @@
+
+col_name_prod=['a','b','c']
+col_name_cdo=['c','d']
+l=(len(col_name_prod))
+database_name_cdo='dtvr3_sms_datalake_hist_db'
+table_name=''
+database_name_prod='dtvp_sms_datalake_hist_db'
+prod_val= ','.join([f"'{item}'" for item in col_name_prod])
+cdo_val= ','.join([f"'{item}'" for item in col_name_cdo])
+s=""
+for i in range(2,l):
+    if i>2:
+        k=","
+    else:
+        k=""
+    s="order by "+ str(i)+k
+s=s+" desc"
+# print(s)
+query_string=f"""select 'CDO', * from (
+    select {prod_val} from {database_name_prod}.{table_name} where gl_period='202402P'
+    except
+    select {cdo_val} from {database_name_cdo}.{table_name} where gl_period='202402P') X
+    union all 
+select 'PROD', * from (
+    select {cdo_val} from {database_name_cdo}.{table_name} where gl_period='202402P'
+    except
+    select {prod_val} from {database_name_prod}.{table_name} where gl_period='202402P') Y
+    """
+print(query_string+s)
+    
