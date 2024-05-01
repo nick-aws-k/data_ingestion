@@ -1,24 +1,45 @@
+import sys
 from pyspark.sql import SparkSession
 from itertools import combinations
 from pyspark.sql.functions import concat_ws
+from awsglue.transforms import *
+from awsglue.utils import getResolvedOptions
+from pyspark.context import SparkContext
+from awsglue.context import GlueContext
+from awsglue.job import Job
 
-# Initialize SparkSession
-spark = SparkSession.builder \
-    .appName("AutomatedUniqueKeyCombination") \
-    .getOrCreate()
+## @params: [JOB_NAME]
+args = getResolvedOptions(sys.argv, ['JOB_NAME'])
 
-# Read data from Athena table into DataFrame
-df = spark.read.format("jdbc") \
-    .option("url", "jdbc:awsathena://athena.us-west-2.amazonaws.com:443") \
-    .option("dbtable", "your_athena_table") \
-    .option("user", "your_aws_access_key_id") \
-    .option("password", "your_aws_secret_access_key") \
-    .load()
+sc = SparkContext()
+glueContext = GlueContext(sc)
+spark = glueContext.spark_session
+job = Job(glueContext)
+job.init(args['JOB_NAME'], args)
+import boto3
 
-# Define date columns to exclude
-date_columns = ["date_column1", "date_column2"]  # Add your date column names here
 
-# Filter out date columns from the list of columns
+# from awswrangler import Session, Pandas
+# from pyspark.sql import SparkSession
+
+# # Initialize SparkSession
+# spark = SparkSession.builder \
+#     .appName("Read from Athena to Spark DataFrame") \
+#     .getOrCreate()
+
+# Initialize AWS Wrangler Session
+import awswrangler as wr
+
+# Define your Athena SQL query
+sql_query = """
+    SELECT *
+    FROM "new_database"."ss_samplee_reco"
+"""
+
+# Read data from Athena into a Pandas DataFrame
+df1 = wr.athena.read_sql_query(sql_query,database='dup_recooo')
+date_columns=[]
+df = spark.createDataFrame(df1)
 non_date_columns = [col for col in df.columns if col not in date_columns]
 
 # Automate finding unique key combinations
@@ -39,6 +60,6 @@ for r in range(2, num_columns + 1):  # Start from 2 columns
             break
     if unique_combination_found:
         break
-
-# Stop SparkSession
-spark.stop()
+# Display the DataFrame
+print(df)
+job.commit()
